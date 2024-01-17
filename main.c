@@ -15,12 +15,40 @@ typedef struct ArrayList
 
 ArrayList* ArrayList_Create(size_t elementSize);
 void* ArrayList_GetElementAt(ArrayList* list, int index);
+
 void ArrayList_AddElement(ArrayList* list, void* newElement);
+void ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement);
+
 void ArrayList_RemoveElement(ArrayList* list);
+void ArrayList_RemoveElementAt(ArrayList* list, int index);
+
 void ArrayList_DoubleCapacity(ArrayList* list); 
 void ArrayList_ReduceCapacity(ArrayList* list);
 
 
+
+
+
+void ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement)
+{
+    if (list == NULL || list->elements == NULL)
+        return;
+    
+    if (index < 0 || index > list->length)
+        return;
+
+    if (list->length >= list->capacity)
+        ArrayList_DoubleCapacity(list);
+
+    for (int i = list->length-1; i >= index; --i)
+    {
+        memcpy((list->elements + list->elementSize * (i+1)), (list->elements + list->elementSize * i), list->elementSize);
+
+        // (list->elements + list->elementSize * (i+1)) = (list->elements + list->elementSize * i);
+    }
+    memcpy((list->elements + list->elementSize * index), newElement, list->elementSize);
+    ++list->length;
+}
 
 
 
@@ -31,25 +59,29 @@ int main(int argc, char** argv)
 {
     ArrayList* intList = ArrayList_Create(sizeof(int));
 
-    int val = 5;
+    int val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
+    val = 5;
     ArrayList_AddElement(intList, (void*)&val);
+    val = 5;
     ArrayList_AddElement(intList, (void*)&val);
+    val = 5;
     ArrayList_AddElement(intList, (void*)&val);
-    ArrayList_AddElement(intList, (void*)&val);
-    ArrayList_AddElement(intList, (void*)&val);
-    val = 888;
-    ArrayList_AddElement(intList, (void*)&val);
-    ArrayList_AddElement(intList, (void*)&val);
-    ArrayList_AddElement(intList, (void*)&val);
+    val = 5;
 
-    ArrayList_RemoveElement(intList);
-    ArrayList_RemoveElement(intList);
-    ArrayList_RemoveElement(intList);
-    ArrayList_RemoveElement(intList);
-    
-    printf("%d\n", *(int*)ArrayList_GetElementAt(intList, 5));
+    // for (int i = 0; i < 34; ++i)
+    // {
+    //     val = i;
+    //     ArrayList_AddElement(intList, (void*)&val);
+    // }
+
+    val = 88;
+    ArrayList_InsertElementAt(intList, 4, (void*)&val);
+
+
+    for(int i = 0; i < intList->length; ++i)
+        printf("%d\n", *(int*)ArrayList_GetElementAt(intList, i));
+
 
     return 0;
 }
@@ -87,8 +119,6 @@ void ArrayList_AddElement(ArrayList* list, void* newElement)
     for (int i = 0; i < list->elementSize; ++i)
         insertPtr[i] = ((char*)newElement)[i];
     ++list->length;
-
-    // printf("%d\n", ((int*)list->elements)[list->length-1] );
 }
 
 
