@@ -15,13 +15,45 @@ typedef struct ArrayList
 
 ArrayList* ArrayList_Create(size_t elementSize);
 void ArrayList_AddElement(ArrayList* list, void* newElement);
+void ArrayList_DoubleCapacity(ArrayList* list); 
+void ArrayList_ReduceCapacity(ArrayList* list);
 
+
+
+
+
+
+
+// MAIN
 int main(int argc, char** argv)
 {
     ArrayList* intList = ArrayList_Create(sizeof(int));
 
+    int val = 5;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+    ArrayList_AddElement(intList, (void*)&val);
+    val = 999;
+
+
     return 0;
 }
+
+
 
 
 
@@ -44,17 +76,34 @@ void ArrayList_AddElement(ArrayList* list, void* newElement)
     if (list->length >= list->capacity)
         ArrayList_DoubleCapacity(list);
 
-    // Copy newElement bytes into the last available elements position
     char* insertPtr = ((char*)(list->elements) + list->elementSize * list->length);
     
     for (int i = 0; i < list->elementSize; ++i)
         insertPtr[i] = ((char*)newElement)[i];
     ++list->length;
 
-    printf("%d\n", ((int*)list->elements)[list->length-1] );
+    // printf("%d\n", ((int*)list->elements)[list->length-1] );
 }
 
 void ArrayList_DoubleCapacity(ArrayList* list)
 {
-    printf("expanding list");
+    list->capacity *= 2;
+    realloc(list->elements, list->capacity * list->elementSize);
 }
+
+void ArrayList_ReduceCapacity(ArrayList* list)
+{
+    list->capacity /= 2;
+    realloc(list->elements, list->capacity * list->elementSize);
+}
+
+
+
+
+
+
+
+
+
+
+
