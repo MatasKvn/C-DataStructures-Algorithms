@@ -14,6 +14,7 @@ typedef struct ArrayList
 } ArrayList;
 
 ArrayList* ArrayList_Create(size_t elementSize);
+void* ArrayList_GetElementAt(ArrayList* list, int index);
 void ArrayList_AddElement(ArrayList* list, void* newElement);
 void ArrayList_RemoveElement(ArrayList* list);
 void ArrayList_DoubleCapacity(ArrayList* list); 
@@ -38,6 +39,7 @@ int main(int argc, char** argv)
     ArrayList_AddElement(intList, (void*)&val);
     ArrayList_AddElement(intList, (void*)&val);
     ArrayList_AddElement(intList, (void*)&val);
+    val = 888;
     ArrayList_AddElement(intList, (void*)&val);
     ArrayList_AddElement(intList, (void*)&val);
     ArrayList_AddElement(intList, (void*)&val);
@@ -46,6 +48,8 @@ int main(int argc, char** argv)
     ArrayList_RemoveElement(intList);
     ArrayList_RemoveElement(intList);
     ArrayList_RemoveElement(intList);
+    
+    printf("%d\n", *(int*)ArrayList_GetElementAt(intList, 5));
 
     return 0;
 }
@@ -65,6 +69,10 @@ ArrayList* ArrayList_Create(size_t elementSize)
     return list;
 }
 
+void* ArrayList_GetElementAt(ArrayList* list, int index)
+{
+    return list->elements + index * list->elementSize;
+}
 
 void ArrayList_AddElement(ArrayList* list, void* newElement)
 {
