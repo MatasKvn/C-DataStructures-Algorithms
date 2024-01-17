@@ -15,6 +15,7 @@ typedef struct ArrayList
 
 ArrayList* ArrayList_Create(size_t elementSize);
 void ArrayList_AddElement(ArrayList* list, void* newElement);
+void ArrayList_RemoveElement(ArrayList* list);
 void ArrayList_DoubleCapacity(ArrayList* list); 
 void ArrayList_ReduceCapacity(ArrayList* list);
 
@@ -33,22 +34,18 @@ int main(int argc, char** argv)
     ArrayList_AddElement(intList, (void*)&val);
     val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
     ArrayList_AddElement(intList, (void*)&val);
-    val = 999;
 
+    ArrayList_RemoveElement(intList);
+    ArrayList_RemoveElement(intList);
+    ArrayList_RemoveElement(intList);
+    ArrayList_RemoveElement(intList);
 
     return 0;
 }
@@ -68,9 +65,10 @@ ArrayList* ArrayList_Create(size_t elementSize)
     return list;
 }
 
+
 void ArrayList_AddElement(ArrayList* list, void* newElement)
 {
-    if (list == NULL)
+    if (list == NULL || list->elements == NULL)
         return;
     
     if (list->length >= list->capacity)
@@ -85,14 +83,34 @@ void ArrayList_AddElement(ArrayList* list, void* newElement)
     // printf("%d\n", ((int*)list->elements)[list->length-1] );
 }
 
+
+#define ARRAYLIST_CAPACITYREDUCECONDITION (list->length < list->capacity/2 && list->capacity > 8)
+void ArrayList_RemoveElement(ArrayList* list)
+{
+    if (list == NULL || list->elements == NULL)
+        return;
+    
+    if (list->length <= 0)
+        return;
+
+    if (ARRAYLIST_CAPACITYREDUCECONDITION)
+        ArrayList_ReduceCapacity(list);
+    
+    --list->length;
+}
+
+
 void ArrayList_DoubleCapacity(ArrayList* list)
 {
+    printf("increasing list capacity to %d\n", list->capacity*2);
     list->capacity *= 2;
     realloc(list->elements, list->capacity * list->elementSize);
 }
 
+
 void ArrayList_ReduceCapacity(ArrayList* list)
 {
+    printf("reducing list capacity to %d\n", list->capacity/2);
     list->capacity /= 2;
     realloc(list->elements, list->capacity * list->elementSize);
 }
