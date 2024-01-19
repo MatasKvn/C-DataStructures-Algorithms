@@ -13,62 +13,136 @@ typedef struct ArrayList
     unsigned int capacity;
 } ArrayList;
 
+// Creation, Deletion, Data access
 ArrayList* ArrayList_Create(size_t elementSize);
-void Arraylist_Destroy(ArrayList* list);
+int Arraylist_Destroy(ArrayList* list);
 void* ArrayList_GetElementAt(ArrayList* list, int index);
 
+// Insertion
 void ArrayList_AddElement(ArrayList* list, void* newElement);
-void ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement);
+int ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement);
 
-void ArrayList_RemoveElement(ArrayList* list);
-void ArrayList_RemoveElementAt(ArrayList* list, int index);
+// Deletion
+int ArrayList_RemoveElement(ArrayList* list);
+int ArrayList_RemoveElementAt(ArrayList* list, int index);
 
+// Capacity change
 void ArrayList_DoubleCapacity(ArrayList* list); 
 void ArrayList_ReduceCapacity(ArrayList* list);
 
+// Sort
+void ArrayList_QSort(ArrayList* list, int (*_PtFuncCompare)(const void *, const void *));
 
 
 
 
 
 
-
-
-
+// TEST
+int _compareIntPtrFunc(const void* a, const void* b)
+{
+    int** a_ = a;
+    int** b_ = b;
+    return (**a_)-(**b_);
+}
 
 // MAIN
 int main(int argc, char** argv)
 {
-    ArrayList* intList = ArrayList_Create(sizeof(int));
+//INTS
+    // ArrayList* intList = ArrayList_Create(sizeof(int));
 
-    int val = 999;
-    ArrayList_AddElement(intList, (void*)&val);
-    val = 1;
-    ArrayList_AddElement(intList, (void*)&val);
-    val = 2;
-    ArrayList_AddElement(intList, (void*)&val);
-    val = 3;
-    ArrayList_AddElement(intList, (void*)&val);
-    val = 5;
+    // int val = 999;
+    // ArrayList_AddElement(intList, (void*)&val);
+    // val = 1;
+    // ArrayList_AddElement(intList, (void*)&val);
+    // val = 2;
+    // ArrayList_AddElement(intList, (void*)&val);
+    // val = 3;
+    // ArrayList_AddElement(intList, (void*)&val);
+    // val = 5;
 
-    // for (int i = 0; i < 34; ++i)
-    // {
-    //     val = i;
-    //     ArrayList_AddElement(intList, (void*)&val);
-    // }
+    // // for (int i = 0; i < 34; ++i)
+    // // {
+    // //     val = i;
+    // //     ArrayList_AddElement(intList, (void*)&val);
+    // // }
 
-    val = 88;
-    ArrayList_InsertElementAt(intList, 0, (void*)&val);
-    ArrayList_RemoveElementAt(intList, 0);
-    ArrayList_RemoveElementAt(intList, 3);
+    // val = 88;
+    // ArrayList_InsertElementAt(intList, 0, (void*)&val);
+    // ArrayList_RemoveElementAt(intList, 0);
+    // ArrayList_RemoveElementAt(intList, 3);
 
-    for(int i = 0; i < intList->length; ++i)
-        printf("%d\n", *(int*)ArrayList_GetElementAt(intList, i));
+    // ArrayList_QSort(intList, _compareIntFN);
 
-    Arraylist_Destroy(intList);
+    // for(int i = 0; i < intList->length; ++i)
+    //     printf("%d\n", *(int*)ArrayList_GetElementAt(intList, i));
+
+    // Arraylist_Destroy(intList);
+
+
+//STRINGS
+    // ArrayList* strList = ArrayList_Create(sizeof(char[20]));
+    // char a[20] = "niggger";
+    // char b[20] = "aksjldf";
+    // char c[20] = "banana";
+    // char d[20] = "helpme";
+
+
+
+    // ArrayList_AddElement(strList, (void*)&a);
+    // ArrayList_AddElement(strList, (void*)&b);
+    // ArrayList_AddElement(strList, (void*)&c);
+    // ArrayList_AddElement(strList, (void*)&d);
+
+    
+
+    // for(int i = 0; i < strList->length; ++i)
+    //     printf("%d\n", ((char*)ArrayList_GetElementAt(strList, i)) == a );
+//INT*
+    ArrayList* intPtrList = ArrayList_Create(sizeof(int*));
+
+
+    int a = 1;
+    int b = 99;
+    int c = 9;
+    int d = 120;
+    int e = 0;
+
+    int* a_ = &a;
+    int* b_ = &b;
+    int* c_ = &c;
+    int* d_ = &d;
+    int* e_ = &e;
+    
+
+
+
+
+    ArrayList_AddElement(intPtrList, (void*)&a_);
+    ArrayList_AddElement(intPtrList, (void*)&b_);
+    ArrayList_AddElement(intPtrList, (void*)&c_);
+    ArrayList_AddElement(intPtrList, (void*)&d_);
+    ArrayList_AddElement(intPtrList, (void*)&e_);
+
+    a = 55;
+    ArrayList_QSort(intPtrList, _compareIntPtrFunc);
+
+    for(int i = 0; i < intPtrList->length; ++i){
+        int** t1 = ArrayList_GetElementAt(intPtrList, i);
+        printf("%d ", *t1 == a_);
+        printf("%d\n", **t1);
+    }
+
+
 
     return 0;
 }
+
+
+
+
+
 
 
 
@@ -85,10 +159,14 @@ ArrayList* ArrayList_Create(size_t elementSize)
     return list;
 }
 
-void Arraylist_Destroy(ArrayList* list)
+int Arraylist_Destroy(ArrayList* list)
 {
+    if (list == NULL)
+        return 0;
+
     free(list->elements);
     free(list);
+    return 1;
 }
 
 // Access
@@ -114,13 +192,13 @@ void ArrayList_AddElement(ArrayList* list, void* newElement)
     ++list->length;
 }
 
-void ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement)
+int ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement)
 {
     if (list == NULL || list->elements == NULL)
-        return;
+        return 0;
     
     if (index < 0 || index > list->length)
-        return;
+        return 0;
 
     if (list->length >= list->capacity)
         ArrayList_DoubleCapacity(list);
@@ -131,35 +209,38 @@ void ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement)
     }
     memcpy((list->elements + list->elementSize * index), newElement, list->elementSize);
     ++list->length;
+
+    return 1;
 }
 
 
 // Deletion
 #define ARRAYLIST_CAPACITYREDUCECONDITION (list->length < list->capacity/2 && list->capacity > 8)
-void ArrayList_RemoveElement(ArrayList* list)
+int ArrayList_RemoveElement(ArrayList* list)
 {
     if (list == NULL || list->elements == NULL)
-        return;
+        return 0;
     
     if (list->length <= 0)
-        return;
+        return 0;
 
     if (ARRAYLIST_CAPACITYREDUCECONDITION)
         ArrayList_ReduceCapacity(list);
     
     --list->length;
+    return 0;
 }
 
-void ArrayList_RemoveElementAt(ArrayList* list, int index)
+int ArrayList_RemoveElementAt(ArrayList* list, int index)
 {
     if (list == NULL || list->elements == NULL)
-        return;
+        return 0;
     
     if (index < 0 || index >= list->length)
-        return;
+        return 0;
 
     if (list->length <= 0)
-        return;
+        return 0;
 
     if (ARRAYLIST_CAPACITYREDUCECONDITION)
         ArrayList_ReduceCapacity(list);
@@ -169,24 +250,28 @@ void ArrayList_RemoveElementAt(ArrayList* list, int index)
         memcpy((list->elements + i * list->elementSize), (list->elements + (i+1) * list->elementSize), list->elementSize);
     }
     --list->length;
+    return 1;
 }
 
 
 // Capacity management
 void ArrayList_DoubleCapacity(ArrayList* list)
 {
-    printf("increasing list capacity to %d\n", list->capacity*2);
     list->capacity *= 2;
     realloc(list->elements, list->capacity * list->elementSize);
 }
 
 void ArrayList_ReduceCapacity(ArrayList* list)
 {
-    printf("reducing list capacity to %d\n", list->capacity/2);
     list->capacity /= 2;
     realloc(list->elements, list->capacity * list->elementSize);
 }
 
+// Sort
+void ArrayList_QSort(ArrayList* list, int (*_PtFuncCompare)(const void *, const void *))
+{
+    qsort(list->elements, list->length, list->elementSize, _PtFuncCompare);
+}
 
 
 
