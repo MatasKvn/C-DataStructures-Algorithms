@@ -33,7 +33,7 @@ void ArrayList_ReduceCapacity(ArrayList* list);
 // Sort
 void ArrayList_QSort(ArrayList* list, int (*_PtFuncCompare)(const void *, const void *));
 
-
+int ArrayList_ContainsElement(ArrayList* list, void* element);
 
 
 
@@ -49,36 +49,7 @@ int _compareIntPtrFunc(const void* a, const void* b)
 // MAIN
 int main(int argc, char** argv)
 {
-//INTS
-    // ArrayList* intList = ArrayList_Create(sizeof(int));
-
-    // int val = 999;
-    // ArrayList_AddElement(intList, (void*)&val);
-    // val = 1;
-    // ArrayList_AddElement(intList, (void*)&val);
-    // val = 2;
-    // ArrayList_AddElement(intList, (void*)&val);
-    // val = 3;
-    // ArrayList_AddElement(intList, (void*)&val);
-    // val = 5;
-
-    // // for (int i = 0; i < 34; ++i)
-    // // {
-    // //     val = i;
-    // //     ArrayList_AddElement(intList, (void*)&val);
-    // // }
-
-    // val = 88;
-    // ArrayList_InsertElementAt(intList, 0, (void*)&val);
-    // ArrayList_RemoveElementAt(intList, 0);
-    // ArrayList_RemoveElementAt(intList, 3);
-
-    // ArrayList_QSort(intList, _compareIntFN);
-
-    // for(int i = 0; i < intList->length; ++i)
-    //     printf("%d\n", *(int*)ArrayList_GetElementAt(intList, i));
-
-    // Arraylist_Destroy(intList);
+    
 
 
 //STRINGS
@@ -133,9 +104,62 @@ int main(int argc, char** argv)
         printf("%d ", *t1 == a_);
         printf("%d\n", **t1);
     }
+    
+
+    // while (intPtrList->length > 0)
+    //     ArrayList_RemoveElement(intPtrList);
+
+    // int nig = 999;
+    // int* nigPt = &nig;
+    // int **nigPtPt = &nigPt;
+    // ArrayList_AddElement(intPtrList, (void*)nigPtPt);
+
+    if (ArrayList_ContainsElement(intPtrList, (void*)(&a_)))
+    {
+        printf("contains\n");
+    } else {
+        printf("doesn't contain.");
+    }
+
+//INTS
+    // ArrayList* intList = ArrayList_Create(sizeof(int));
+
+    // int val = 999;
+    // ArrayList_AddElement(intList, (void*)&val);
+    // val = 1;
+    // ArrayList_AddElement(intList, (void*)&val);
+
+    // // ArrayList_QSort(intList, _compareIntFN);
+
+    // for(int i = 0; i < intList->length; ++i)
+    //     printf("%d\n", *(int*)ArrayList_GetElementAt(intList, i));
+
+
+    
+    // val = 1;
+    // if (ArrayList_ContainsElement(intList, (void*)&val))
+    // {
+    //     printf("contains\n");
+    // } else {
+    //     printf("doesn't contain.");
+    // }
+
+
+    // Arraylist_Destroy(intList);
+
+    return 0;
+}
 
 
 
+
+int ArrayList_ContainsElement(ArrayList* list, void* element)
+{
+    for (int i = 0; i < list->length; ++i)
+    {
+        if (memcmp((char*)list->elements + i * list->elementSize, (char*)element, list->elementSize) == 0)
+            return 1;
+    }
     return 0;
 }
 
