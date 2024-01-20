@@ -23,7 +23,7 @@ void ArrayList_AddElement(ArrayList* list, void* newElement);
 int ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement);
 
 // Deletion
-int ArrayList_RemoveElement(ArrayList* list);
+int ArrayList_RemoveLastElement(ArrayList* list);
 int ArrayList_RemoveElementAt(ArrayList* list, int index);
 
 // Capacity change
@@ -35,6 +35,7 @@ void ArrayList_QSort(ArrayList* list, int (*_PtFuncCompare)(const void *, const 
 
 int ArrayList_ContainsElement(ArrayList* list, void* element);
 int ArrayList_IndexOf(ArrayList* list, void* element);
+int ArrayList_RemoveElement(ArrayList* list, void* element);
 
 
 
@@ -107,7 +108,7 @@ int main(int argc, char** argv)
     
 
     // while (intPtrList->length > 0)
-    //     ArrayList_RemoveElement(intPtrList);
+    //     ArrayList_RemoveLastElement(intPtrList);
 
     // int nig = 999;
     // int* nigPt = &nig;
@@ -122,6 +123,18 @@ int main(int argc, char** argv)
     }
 
     printf("Index of: %d\n", ArrayList_IndexOf(intPtrList, &d_));
+
+    for(int i = 0; i < intPtrList->length; ++i){
+        int** t1 = ArrayList_GetElementAt(intPtrList, i);
+        printf("%d\n", **t1);
+    }
+
+    ArrayList_RemoveElement(intPtrList, &c_);
+    printf("\n");
+    for(int i = 0; i < intPtrList->length; ++i){
+        int** t1 = ArrayList_GetElementAt(intPtrList, i);
+        printf("%d\n", **t1);
+    }
 
 //INTS
     // ArrayList* intList = ArrayList_Create(sizeof(int));
@@ -150,6 +163,16 @@ int main(int argc, char** argv)
     // Arraylist_Destroy(intList);
 
     return 0;
+}
+
+int ArrayList_RemoveElement(ArrayList* list, void* element)
+{
+    int index = ArrayList_IndexOf(list, element);
+    if (index == -1)
+        return -0;
+
+    ArrayList_RemoveElementAt(list, index);
+    return 1;
 }
 
 
@@ -250,7 +273,7 @@ int ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement)
 
 // Deletion
 #define ARRAYLIST_CAPACITYREDUCECONDITION (list->length < list->capacity/2 && list->capacity > 8)
-int ArrayList_RemoveElement(ArrayList* list)
+int ArrayList_RemoveLastElement(ArrayList* list)
 {
     if (list == NULL || list->elements == NULL)
         return 0;
