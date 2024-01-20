@@ -16,7 +16,10 @@ typedef struct ArrayList
 // Creation, Deletion, Data access
 ArrayList* ArrayList_Create(size_t elementSize);
 int Arraylist_Destroy(ArrayList* list);
+
 void* ArrayList_GetElementAt(ArrayList* list, int index);
+int ArrayList_IndexOf(ArrayList* list, void* element);
+int ArrayList_ContainsElement(ArrayList* list, void* element);
 
 // Insertion
 void ArrayList_AddElement(ArrayList* list, void* newElement);
@@ -25,6 +28,7 @@ int ArrayList_InsertElementAt(ArrayList* list, int index, void* newElement);
 // Deletion
 int ArrayList_RemoveLastElement(ArrayList* list);
 int ArrayList_RemoveElementAt(ArrayList* list, int index);
+int ArrayList_RemoveElement(ArrayList* list, void* element);
 
 // Capacity change
 void ArrayList_DoubleCapacity(ArrayList* list); 
@@ -33,9 +37,7 @@ void ArrayList_ReduceCapacity(ArrayList* list);
 // Sort
 void ArrayList_QSort(ArrayList* list, int (*_PtFuncCompare)(const void *, const void *));
 
-int ArrayList_ContainsElement(ArrayList* list, void* element);
-int ArrayList_IndexOf(ArrayList* list, void* element);
-int ArrayList_RemoveElement(ArrayList* list, void* element);
+
 
 
 
@@ -55,9 +57,9 @@ int main(int argc, char** argv)
 
 //STRINGS
     // ArrayList* strList = ArrayList_Create(sizeof(char[20]));
-    // char a[20] = "niggger";
-    // char b[20] = "aksjldf";
-    // char c[20] = "banana";
+    // char a[20] = "testing";
+    // char b[20] = "aksjldhf";
+    // char c[20] = "banan";
     // char d[20] = "helpme";
 
 
@@ -70,71 +72,93 @@ int main(int argc, char** argv)
     
 
     // for(int i = 0; i < strList->length; ++i)
-    //     printf("%d\n", ((char*)ArrayList_GetElementAt(strList, i)) == a );
-//INT*
-    ArrayList* intPtrList = ArrayList_Create(sizeof(int*));
+    //     printf("%s\n", ((char*)ArrayList_GetElementAt(strList, i)));
+
+    // char aaa[20] = "testing";
+    // printf("contains 'testing': %d\n", ArrayList_ContainsElement(strList, a));
 
 
-    int a = 1;
-    int b = 99;
-    int c = 9;
-    int d = 120;
-    int e = 0;
+    ArrayList* strPtrList = ArrayList_Create(sizeof(char*));
+    char str1[20] = "testing";
+    char str2[20] = "ttt";
+    char** pt1 = &str1;
+    char** pt2 = &str2;
 
-    int* a_ = &a;
-    int* b_ = &b;
-    int* c_ = &c;
-    int* d_ = &d;
-    int* e_ = &e;
-    
+    ArrayList_AddElement(strPtrList, (void*)pt1);
+    ArrayList_AddElement(strPtrList, (void*)pt2);
+    // printf("%s\n", pt1);
 
-
-
-
-    ArrayList_AddElement(intPtrList, (void*)&a_);
-    ArrayList_AddElement(intPtrList, (void*)&b_);
-    ArrayList_AddElement(intPtrList, (void*)&c_);
-    ArrayList_AddElement(intPtrList, (void*)&d_);
-    ArrayList_AddElement(intPtrList, (void*)&e_);
-
-    a = 55;
-    ArrayList_QSort(intPtrList, _compareIntPtrFunc);
-
-    for(int i = 0; i < intPtrList->length; ++i){
-        int** t1 = ArrayList_GetElementAt(intPtrList, i);
-        printf("%d ", *t1 == a_);
-        printf("%d\n", **t1);
-    }
-    
-
-    // while (intPtrList->length > 0)
-    //     ArrayList_RemoveLastElement(intPtrList);
-
-    // int nig = 999;
-    // int* nigPt = &nig;
-    // int **nigPtPt = &nigPt;
-    // ArrayList_AddElement(intPtrList, (void*)nigPtPt);
-
-    if (ArrayList_ContainsElement(intPtrList, (void*)(&a_)))
+    for (int i = 0; i < strPtrList->length; ++i)
     {
-        printf("contains\n");
-    } else {
-        printf("doesn't contain.\n");
+        char* temp = ArrayList_GetElementAt(strPtrList, i);
+        printf("%s\n", temp);
     }
 
-    printf("Index of: %d\n", ArrayList_IndexOf(intPtrList, &d_));
 
-    for(int i = 0; i < intPtrList->length; ++i){
-        int** t1 = ArrayList_GetElementAt(intPtrList, i);
-        printf("%d\n", **t1);
-    }
+//INT*
+    // ArrayList* intPtrList = ArrayList_Create(sizeof(int*));
 
-    ArrayList_RemoveElement(intPtrList, &c_);
-    printf("\n");
-    for(int i = 0; i < intPtrList->length; ++i){
-        int** t1 = ArrayList_GetElementAt(intPtrList, i);
-        printf("%d\n", **t1);
-    }
+
+    // int a = 1;
+    // int b = 99;
+    // int c = 9;
+    // int d = 120;
+    // int e = 0;
+
+    // int* a_ = &a;
+    // int* b_ = &b;
+    // int* c_ = &c;
+    // int* d_ = &d;
+    // int* e_ = &e;
+    
+
+
+
+
+    // ArrayList_AddElement(intPtrList, (void*)&a_);
+    // ArrayList_AddElement(intPtrList, (void*)&b_);
+    // ArrayList_AddElement(intPtrList, (void*)&c_);
+    // ArrayList_AddElement(intPtrList, (void*)&d_);
+    // ArrayList_AddElement(intPtrList, (void*)&e_);
+
+    // a = 55;
+    // ArrayList_QSort(intPtrList, _compareIntPtrFunc);
+
+    // for(int i = 0; i < intPtrList->length; ++i){
+    //     int** t1 = ArrayList_GetElementAt(intPtrList, i);
+    //     printf("%d ", *t1 == a_);
+    //     printf("%d\n", **t1);
+    // }
+    
+
+    // // while (intPtrList->length > 0)
+    // //     ArrayList_RemoveLastElement(intPtrList);
+
+    // // int nig = 999;
+    // // int* nigPt = &nig;
+    // // int **nigPtPt = &nigPt;
+    // // ArrayList_AddElement(intPtrList, (void*)nigPtPt);
+
+    // if (ArrayList_ContainsElement(intPtrList, (void*)(&a_)))
+    // {
+    //     printf("contains\n");
+    // } else {
+    //     printf("doesn't contain.\n");
+    // }
+
+    // printf("Index of: %d\n", ArrayList_IndexOf(intPtrList, &d_));
+
+    // for(int i = 0; i < intPtrList->length; ++i){
+    //     int** t1 = ArrayList_GetElementAt(intPtrList, i);
+    //     printf("%d\n", **t1);
+    // }
+
+    // ArrayList_RemoveElement(intPtrList, &c_);
+    // printf("\n");
+    // for(int i = 0; i < intPtrList->length; ++i){
+    //     int** t1 = ArrayList_GetElementAt(intPtrList, i);
+    //     printf("%d\n", **t1);
+    // }
 
 //INTS
     // ArrayList* intList = ArrayList_Create(sizeof(int));
