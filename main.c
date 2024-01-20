@@ -34,7 +34,7 @@ void ArrayList_ReduceCapacity(ArrayList* list);
 void ArrayList_QSort(ArrayList* list, int (*_PtFuncCompare)(const void *, const void *));
 
 int ArrayList_ContainsElement(ArrayList* list, void* element);
-
+int ArrayList_IndexOf(ArrayList* list, void* element);
 
 
 
@@ -118,8 +118,10 @@ int main(int argc, char** argv)
     {
         printf("contains\n");
     } else {
-        printf("doesn't contain.");
+        printf("doesn't contain.\n");
     }
+
+    printf("Index of: %d\n", ArrayList_IndexOf(intPtrList, &d_));
 
 //INTS
     // ArrayList* intList = ArrayList_Create(sizeof(int));
@@ -151,7 +153,15 @@ int main(int argc, char** argv)
 }
 
 
-
+int ArrayList_IndexOf(ArrayList* list, void* element)
+{
+    for (int i = 0; i < list->length; ++i)
+    {
+        if (memcmp((char*)list->elements + i * list->elementSize, (char*)element, list->elementSize) == 0)
+            return i;
+    }
+    return -1;
+}
 
 int ArrayList_ContainsElement(ArrayList* list, void* element)
 {
